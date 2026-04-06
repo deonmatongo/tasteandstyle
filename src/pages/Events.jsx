@@ -1,42 +1,45 @@
 import { useState } from 'react';
 import EventCard from '../components/EventCard';
 import { useBooking } from '../context/BookingContext';
+import { useLanguage } from '../context/LanguageContext';
 import { events, pastEvents } from '../data/events';
 
 const cities = ['All', 'Warsaw', 'Kraków', 'Poznań', 'Gdańsk'];
-const statusFilters = ['All', 'Upcoming', 'Past'];
 
 export default function Events() {
   const { openBooking } = useBooking();
-  const [cityFilter, setCityFilter] = useState('All');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const { t } = useLanguage();
+  const ep = t.eventsPage;
+
+  const statusFilters = [ep.filterAll, ep.filterUpcoming, ep.filterPast];
+
+  const [cityFilter, setCityFilter] = useState(ep.filterAll);
+  const [statusFilter, setStatusFilter] = useState(ep.filterAll);
 
   const allEvents = [...events, ...pastEvents];
 
   const filtered = allEvents.filter(e => {
-    const cityMatch = cityFilter === 'All' || e.city === cityFilter;
+    const cityMatch = cityFilter === ep.filterAll || e.city === cityFilter;
     const isPast = e.status === 'past';
-    if (statusFilter === 'Upcoming') return cityMatch && !isPast;
-    if (statusFilter === 'Past') return cityMatch && isPast;
+    if (statusFilter === ep.filterUpcoming) return cityMatch && !isPast;
+    if (statusFilter === ep.filterPast) return cityMatch && isPast;
     return cityMatch;
   });
 
+  const headingLines = ep.heading.split('\n');
+
   return (
     <div className="events-page">
-      {/* Page hero */}
       <div className="events-page-hero">
         <div className="events-hero-inner">
-          <span className="section-label reveal" style={{ color: 'var(--gold)' }}>Our Editions</span>
+          <span className="section-label reveal" style={{ color: 'var(--gold)' }}>{ep.label}</span>
           <h1 className="events-hero-heading reveal reveal-delay-1">
-            Every city.<br />Every season.<br />One <em>ethos</em>.
+            {headingLines[0]}<br />{headingLines[1]}<br />{headingLines[2]} <em>{ep.headingEm}</em>.
           </h1>
-          <p className="events-hero-sub reveal reveal-delay-2">
-            From Warsaw to Gdańsk, Taste &amp; Style hosts intimate evenings at the intersection of haute cuisine and fashion.
-          </p>
+          <p className="events-hero-sub reveal reveal-delay-2">{ep.sub}</p>
         </div>
       </div>
 
-      {/* Filters */}
       <div className="events-filter-bar">
         <div className="events-filter-inner">
           <div className="filter-tabs">
@@ -51,30 +54,32 @@ export default function Events() {
             ))}
           </div>
           <div className="filter-cities">
-            {cities.map(c => (
-              <button
-                key={c}
-                className={`city-filter-btn${cityFilter === c ? ' active' : ''}`}
-                onClick={() => setCityFilter(c)}
-              >
-                {c}
-              </button>
-            ))}
+            {cities.map((c, i) => {
+              const label = i === 0 ? ep.cityAll : c;
+              return (
+                <button
+                  key={c}
+                  className={`city-filter-btn${cityFilter === (i === 0 ? ep.filterAll : c) ? ' active' : ''}`}
+                  onClick={() => setCityFilter(i === 0 ? ep.filterAll : c)}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* Grid */}
       <div className="events-grid-section">
         {filtered.length === 0 ? (
           <div className="events-empty-state">
             <span className="events-empty-emoji">◎</span>
-            <p className="events-empty-text">No editions match this filter.</p>
+            <p className="events-empty-text">{ep.emptyState}</p>
             <button
               className="btn-outline"
-              onClick={() => { setCityFilter('All'); setStatusFilter('All'); }}
+              onClick={() => { setCityFilter(ep.filterAll); setStatusFilter(ep.filterAll); }}
             >
-              Clear filters
+              {ep.clearFilters}
             </button>
           </div>
         ) : (

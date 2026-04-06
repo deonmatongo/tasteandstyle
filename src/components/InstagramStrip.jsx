@@ -1,4 +1,5 @@
 import { Camera } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const posts = [
   { photo: '/pictures/photo_0002.jpg', likes: '1.2k', caption: 'Valentine Opulence · Edition IV' },
@@ -10,12 +11,13 @@ const posts = [
 ];
 
 export default function InstagramStrip() {
+  const { t } = useLanguage();
   return (
     <section className="insta-strip">
       <div className="insta-strip-header reveal">
         <div className="insta-strip-handle">
           <Camera size={18} strokeWidth={1.5} />
-          <span>@tasteandstyle.official</span>
+          <span>{t.insta.handle}</span>
         </div>
         <a
           href="https://instagram.com"
@@ -23,7 +25,7 @@ export default function InstagramStrip() {
           rel="noopener noreferrer"
           className="insta-follow-btn"
         >
-          Follow us
+          {t.insta.follow}
         </a>
       </div>
 

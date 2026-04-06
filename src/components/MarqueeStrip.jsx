@@ -1,11 +1,8 @@
-const items = [
-  'Fashion Forward', 'Fine Dining', 'Curated Editions', 'London',
-  'Exclusive Experiences', 'Style Conversations', 'By Agnessitta',
-  'La Dolce Afro', 'Valentine Opulence', 'Culture & Community',
-];
+import { useLanguage } from '../context/LanguageContext';
 
 export default function MarqueeStrip() {
-  const doubled = [...items, ...items];
+  const { t } = useLanguage();
+  const doubled = [...t.marquee, ...t.marquee];
   return (
     <div className="marquee-strip">
       <div className="marquee-track">
