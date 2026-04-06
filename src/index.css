@@ -910,17 +910,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .upcoming-events-scroll {
-  padding: 0 20px;
   display: flex;
-  gap: 20px;
+  flex-direction: row;
+  gap: 16px;
   overflow-x: auto;
+  overflow-y: visible;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding-bottom: 16px;
+  padding: 0 20px 20px;
+  scroll-snap-type: x mandatory;
 }
 
 .upcoming-events-scroll::-webkit-scrollbar { display: none; }
-.upcoming-events-scroll .event-card { flex: 0 0 320px; }
+
+.upcoming-events-scroll > * {
+  flex: 0 0 82vw;
+  max-width: 340px;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 480px) {
+  .upcoming-events-scroll > * { flex: 0 0 72vw; }
+}
 
 @media (min-width: 768px) {
   .upcoming-events { padding: 100px 0; }
@@ -931,27 +942,22 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: space-between;
   }
   .upcoming-events-scroll {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    overflow: visible;
-    padding: 0 32px;
-    padding-bottom: 0;
+    padding: 0 32px 24px;
+    gap: 20px;
   }
-  .upcoming-events-scroll .event-card { flex: none; }
+  .upcoming-events-scroll > * { flex: 0 0 340px; max-width: 340px; }
 }
 
 @media (min-width: 1024px) {
   .upcoming-events-header { padding: 0 40px; margin-bottom: 56px; }
-  .upcoming-events-scroll { padding: 0 40px; gap: 28px; }
+  .upcoming-events-scroll { padding: 0 40px 24px; gap: 24px; }
+  .upcoming-events-scroll > * { flex: 0 0 360px; max-width: 360px; }
 }
 
 @media (min-width: 1280px) {
   .upcoming-events-header { padding: 0 60px; }
-  .upcoming-events-scroll {
-    padding: 0 60px;
-    grid-template-columns: repeat(4, 1fr);
-  }
+  .upcoming-events-scroll { padding: 0 60px 24px; gap: 28px; }
+  .upcoming-events-scroll > * { flex: 0 0 380px; max-width: 380px; }
 }
 
 /* ============================================================
